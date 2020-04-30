@@ -7,7 +7,8 @@
 </head>
 <body>
     <?php
-    $quotes = array(
+    session_start();
+    $_SESSION["quotes"] = array(
         "You're gonna need a bigger boat. <br /> <br />",
         "May the Force be with you... always. <br /> <br />",
         "I'm as mad as hell, and I'm not going to take it anymore! <br /> <br />",
@@ -23,23 +24,36 @@
         <input type="submit">
     </form>
     <p><?php
-    if ($_GET["quote-number"] < 0 || $_GET["quote-number"] > 6)
-        echo "No quote found for that number.";
-    else {
-        /*$i = $_GET["quote-number"];
-        while ($i < sizeof($quotes)) {
-            echo $quotes[$i];
-            $i++;
-        }*/
+        if ($_SERVER["REQUEST_METHOD"] == "GET") {
+            if ($_GET["quote-number"] < 0 || $_GET["quote-number"] > 6)
+                echo "No quote found for that number.";
+            else {
+                $i = $_GET["quote-number"];
+                while ($i < sizeof($_SESSION["quotes"])) {
+                    echo $_SESSION["quotes"][$i];
+                    $i++;
+                }
 
-        for ($i = $_GET["quote-number"]; $i < sizeof($quotes); $i++) {
-            echo $quotes[$i];
+                /*for ($i = $_GET["quote-number"]; $i < sizeof($quotes); $i++) {
+                    echo $quotes[$i];
+                }*/
+
+            }
         }
-
-    }
-        //echo $quotes[$_GET["quote-number"]];
-
-
+            //echo $quotes[$_GET["quote-number"]];
     ?></p>
+
+    <form action="" method="POST">
+        Add a New Quote: <input type="text" name="new-quote">
+        <input type="submit">
+    </form>
+    <?php 
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            array_push($_SESSION["quotes"], $_POST["new-quote"]);
+            for ($i = 0; $i < sizeof($_SESSION["quotes"]); $i++) {
+                echo $_SESSION["quotes"][$i];
+            }
+        }
+    ?>
 </body>
 </html>
